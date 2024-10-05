@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
+    crossorigin="anonymous"
+    />
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- Data fetching -->
+    <div id="quotes"> </div>
+    <div id="author"></div>
+    <button id="newQ">new Quotes</button>
+    <button id="tweetMe">Tweet</button>
+
+    <div class="container">
+        <div class="inner">
+            <div class="box">
+                <p class="number">
+                    <img src="images/download.png" 
+                    alt="tweet" 
+                    title="TweetMe"
+                    id="tweet" />
+                </p>
+                <div class="text">
+                    <i class="start-quote fas fa-quote-left"></i>
+                        <p id="quotes" class="quotes"></p>
+                        <p id="author" class="author"></p>
+                </div>
+
+                <label class="button">
+                    <p id="newQ">new Quotes</p>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        //to get random quotes awith author name
+        const quotes = document.getElementById("quotes");
+        const author = document.getElementById("author");
+        const button = document.getElementById('newQ');
+        const buttonT = document.getElementById('tweetMe');
+
+        //to use in multiple places
+        let realData = "";
+        let quotesData = "";
+
+        //it will get u on twitter page
+        // const tweetNow = () => {
+        //     //web intent url
+        // let tweetPost =  "https://twitter.com/intent/tweet";
+        // window.open(tweetPost);
+        // };
+
+        //to add the data by using query parameters
+        const tweetNow = () => {
+            //web intent url
+            let tweetPost = `https://twitter.com/intent/tweet?text=${quotesData.text} ${quotesData.author}`;
+            window.open(tweetPost);
+        };
+
+
+        const getNewQuotes = () => {
+            //generating random number amd removing decimal values
+            let rnum = Math.floor(Math.random() * 10);
+            // console.log(rnum);
+
+            //we will get random author names
+            //    console.log(realData[rnum].author);
+            quotesData = realData[rnum];
+            // quotes.innerText = `${realData[rnum].text}`;
+            quotes.innerText = `${quotesData.text}`;
+            // if(quotesData == null)
+            // author.innerText = `${realData[rnum].author}`;
+
+            quotesData == null
+                ? (author.innerText = "unKnown")
+                : (author.innerText = `${quotesData.author}`);
+        };
+
+        const getQuotes = async () => {
+            const api = "https://type.fit/api/quotes";
+            try {
+                //caling our api
+                let data = await fetch(api);
+                // console.log(data);
+
+                //converting into Json
+                // console.log(data.json());
+
+                //let realData = await data.json();
+                realData = await data.json();
+                // console.log(realData);
+                // console.log(realData[0]);
+                // console.log(realData[1].text);
+                // console.log(realData.length);
+                // console.log(realData[10].author);
+
+                //whenever i refresh or back i will get a new quotes
+                getNewQuotes();
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        //adding event listenr for Tweet
+        buttonT.addEventListener('click', tweetNow)
+
+        //adding Event listener to button 
+        button.addEventListener('click', getNewQuotes);
+
+        //  randaom quotes will get
+        getQuotes();
+    </script>
+</body>
+
+</html>
